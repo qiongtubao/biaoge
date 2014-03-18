@@ -1,0 +1,14 @@
+{
+	"httpServer": {
+		"port":80,
+		"path":"./html/",
+		"indexs":["index.html"],
+		"virtualDirectorys":{
+			"latte_web": {
+				"path":"E:\\workspace\\latte_web_lib\\"
+			}
+		}
+		
+	},
+	"uploadDir": "./upload"
+}
