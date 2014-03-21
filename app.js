@@ -1,7 +1,7 @@
 (function(define) { 'use strict';
 	define(function(require, exports, module) {
 
-		var server = require("latte"),
+		var server = require("latte_server"),
 			route = require("./routes/route") ;
 		server.latte({
 			gets: route.gets,
