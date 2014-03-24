@@ -4,12 +4,13 @@
 
 		var tool = require("./tool");
 		var svn = require('./svn');
+		var grid = require('./grid');
 		(function() {
 			this.gets = {
 				"/tool/download":tool.download,
 
-				/* svn */
-				"/svn/update" : svn.update
+				"/svn/update" : svn.update,
+				"/grid" : grid.getGridData
 			};
 			this.posts = {
 				"/tool/upload": tool.upload

@@ -6,27 +6,40 @@ Ext.define('BG.controller.Svn', {
 		'SvnTreeStore'
 	],
 
+	svnLoadMask : null,
+
 	init : function() {
-		this.control({
-			'viewport app-svn-treepanel' : {
-				render : this.onSVNTreePanelRender
-			},
+		var me = this;
+		me.control({
 			'viewport app-svn-treepanel #updateSVN' : {
 				click : this.onUpdateSVNClick
+			},
+			'viewport app-svn-treepanel' : {
+				itemdblclick : this.onFileItemDblClick
 			}
 		});
 	},
 
-	onSVNTreePanelRender : function(view) {
+	onUpdateSVNClick : function() {
 		var store = this.getStore('SvnTreeStore');
-		var loading = new Ext.LoadMask(view, {
-			store : store
+		var root = store.getRootNode();
+		store.load({
+			node : root
 		});
-		store.load();
 	},
 
-	onUpdateSVNClick : function() {
+	onFileItemDblClick : function(view, record) {
+		if(!record.isLeaf()) return;
+		Ext.Ajax.request({
+			url : '../grid',
+			method : 'GET',
+			params : {
+				path : record.get('filePath')
+			},
+			success : function(resp) {
 
+			}
+		});
 	}
 
 });

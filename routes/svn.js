@@ -5,7 +5,7 @@
 		var fse = require('fs-extra');
 		var cp = require('child_process');
 
-		var SVN_REMOTE_PATH = 'https://192.168.1.20/svn/btg/seaking/disigner/';
+		var SVN_REMOTE_PATH = 'https://192.168.1.20/svn/btg/seaking/disigner/%E6%95%B0%E5%80%BC%E6%96%87%E6%A1%A3numerical%20date/';
 
 		var SVN_PATH = './svn';
 		var SVN_CHECKOUT_FLAG_PATH = './svn/.biaoge_svn_checkout';
@@ -32,26 +32,35 @@
 			};
 
 			this.updateSVN = function(req, res) {
-
+				var update, cmd, args;
+				var data = {
+					success: true,
+					code : 200,
+					files: []
+				};
+				args = SVN_UPDATE_CMD.split(' ');
+				cmd = args.shift();
+				update = cp.spawn(cmd, args, {
+					encoding : 'utf8',
+					cwd : fs.realpathSync(SVN_PATH)
+				});
+				update.on('exit', function(code) {
+					console.log('update svn code ' + code);
+					data.code = code;
+					_self.readdirInto(SVN_PATH, data.files, function() {
+						res.end(JSON.stringify(data, null, ' '));
+					});
+				});
 			};
 
 			this.checkoutSVN = function(req, res) {
+				console.log('checkout ...');
 				var checkout, cmd, args;
 				var data = {
-					success : true
+					success: true,
+					code : 200,
+					files: []
 				};
-				fs.readdir(SVN_PATH, function(err, files) {
-					files.forEach(function(file, idx) {
-						var stat = fs.statSync(SVN_PATH + '/' + file);
-						files[idx] = {
-							name : file,
-							leaf : !stat.isDirectory
-						};
-					})
-					data.files = files;
-					res.end(JSON.stringify(data));
-				});
-				return;
 				if(fs.existsSync(SVN_PATH)) {
 					fse.removeSync(SVN_PATH);
 				}
@@ -63,8 +72,49 @@
 					cwd : fs.realpathSync(SVN_PATH)
 				});
 				checkout.on('exit', function(code) {
+					console.log('checkout code ' + code);
+					data.code = code;
+					_self.readdirInto(SVN_PATH, data.files, function() {
+						fs.writeFileSync(SVN_CHECKOUT_FLAG_PATH, '', 'utf-8');
+						res.end(JSON.stringify(data, null, ' '));
+					});
+				});
+			};
 
-					res.end(code);
+			this.readdirInto = function(dir, outFiles, callback) {
+				fs.readdir(dir, function(err, files) {
+					if(err) {
+						console.error(err);
+						callback();
+						return;
+					}
+					var count = files.length;
+					function checkReady() {
+						count --;
+						if(count === 0) {
+							callback();
+						}
+					}
+					files.forEach(function(file, idx) {
+						var item, stat;
+						if(file.charAt(0) === '.') {
+							checkReady();
+							return;
+						}
+						stat = fs.statSync(dir + '/' + file);
+						item = {
+							name : file,
+							leaf : !stat.isDirectory(),
+							filePath : dir + '/' + file
+						};
+						if(!item.leaf) {
+							item.files = [];
+							_self.readdirInto(dir+'/'+file, item.files, checkReady);
+						} else {
+							checkReady();
+						}
+						outFiles.push(item);
+					})
 				});
 			};
 
