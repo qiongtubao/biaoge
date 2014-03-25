@@ -6,6 +6,11 @@ Ext.define('BG.controller.Svn', {
 		'SvnTreeStore'
 	],
 
+	refs: [{
+		ref: 'dataPanel',
+		selector: 'app-data-panel'
+	}],
+
 	svnLoadMask : null,
 
 	init : function() {
@@ -29,6 +34,7 @@ Ext.define('BG.controller.Svn', {
 	},
 
 	onFileItemDblClick : function(view, record) {
+		var me = this;
 		if(!record.isLeaf()) return;
 		Ext.Ajax.request({
 			url : '../grid',
@@ -37,7 +43,8 @@ Ext.define('BG.controller.Svn', {
 				path : record.get('filePath')
 			},
 			success : function(resp) {
-
+				var data = JSON.parse(resp.responseText);
+				me.getDataPanel().setData(data.grid);
 			}
 		});
 	}

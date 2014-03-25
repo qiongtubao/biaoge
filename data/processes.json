@@ -1,0 +1,14 @@
+[
+  {
+    "name": "empty",
+    "code": "outputData = sourceData;\noutputData.unshift('yes');"
+  },
+  {
+    "name": "技能-表头适配",
+    "code": "var map = {\n    \"ID\" : \"skillId\",\n    \"技能名称\" : \"skillName\",\n    \"技能图标\" : \"icon\",\n    \"技能描述\" : \"description\",\n    \"类型(影响技能所在位置)\" : \"type\",\n    \"发动类型\" : \"triggerType\",\n    \"触发条件\" : \"triggerCondition\",\n    \"初始等级\" : \"startLevel\",\n    \"起始效果\" : \"startEffect\",\n    \"终极效果\" : \"finalEffect\",\n    \"获取途径\" : \"wayToGet\",\n    \"技能释放条件\" : \"condition\",\n    \"释放时机\" : \"timing\",\n    \"特效位置\" : \"effectPos\",\n    \"作用目标\" : \"affectTarget\",\n    \"特殊效果\" : \"specialEffect\"\n};\n\nvar header = sourceData[0];\nheader.forEach(function(key, idx) {\n    header[idx] = map[key] || key;\n});\noutputData = sourceData;"
+  },
+  {
+    "name": "第一行表头 - 输出数组，里面是JSON",
+    "code": "var data = [];\nvar header = sourceData.shift();\nsourceData.forEach(function(row) {\n    var item = {};\n    row.forEach(function(value, idx) {\n        item[header[idx]] = value;\n    });\n    data.push(item);\n});\n\noutputData = data;"
+  }
+]

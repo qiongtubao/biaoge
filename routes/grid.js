@@ -24,7 +24,7 @@
 					} else {
 						data.grid = gridData;
 					}
-					res.end(JSON.stringify(data));
+					res.end(JSON.stringify(data, null, ' '));
 				});
 			};
 
