@@ -4,16 +4,15 @@ Ext.define('BG.Application', {
     extend: 'Ext.app.Application',
 
     views: [
-        // TODO: add views here
     ],
 
     controllers: [
-        // TODO: add controllers here
-		'Svn'
+		'Svn',
+		'Process'
     ],
 
     stores: [
-        // TODO: add stores here
-		'SvnTreeStore'
+		'SvnTreeStore',
+		'ProcessStore'
     ]
 });

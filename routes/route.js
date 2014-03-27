@@ -5,15 +5,20 @@
 		var tool = require("./tool");
 		var svn = require('./svn');
 		var grid = require('./grid');
+		var process = require('./process');
 		(function() {
 			this.gets = {
 				"/tool/download":tool.download,
 
 				"/svn/update" : svn.update,
-				"/grid" : grid.getGridData
+				"/grid" : grid.getGridData,
+				'/process/list' : process.list
 			};
 			this.posts = {
-				"/tool/upload": tool.upload
+				"/tool/upload": tool.upload,
+				'/process/create' : process.create,
+				'/process/remove' : process.remove,
+				'/process/update' : process.update
 			}
 		}).call(module.exports);
 	});

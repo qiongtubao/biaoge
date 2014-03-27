@@ -3,7 +3,11 @@ Ext.define('BG.view.Viewport', {
     requires:[
         'Ext.layout.container.Border',
 		'Ext.tab.Panel',
-		'BG.view.SvnTreePanel'
+		'Ext.grid.plugin.DragDrop',
+		'BG.view.SvnTreePanel',
+		'BG.view.ProcessPanel',
+		'BG.view.FlowPanel',
+		'BG.view.DataPanel'
     ],
 
     layout: {
@@ -17,7 +21,18 @@ Ext.define('BG.view.Viewport', {
 		width: '20%'
     }, {
 		xtype: 'tabpanel',
-		region : 'center',
-		width: '80%'
+		region : 'east',
+		width: '30%',
+		split : true,
+		items : [{
+			xtype : 'app-process-panel'
+		}, {
+			xtype : 'app-flow-panel'
+		}]
+	}, {
+		xtype: 'app-data-panel',
+		width : '50%',
+		split : true,
+		region: 'center'
 	}]
 });
